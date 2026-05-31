@@ -144,26 +144,92 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
 #fc-table td:first-child{text-align:left;font-weight:500;}
 #fc-table tr.fc-hl td{background:rgba(79,142,247,0.06);}
 .fc-pos{color:var(--gr);font-weight:600;}.fc-neg{color:var(--re);font-weight:600;}
+.fc-params-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media(max-width:640px){.fc-params-grid{grid-template-columns:1fr !important;}}
 .fsrc{font-size:11px;color:var(--mu);font-family:var(--mono);}
 .err{font-size:11px;color:var(--re);padding:8px 12px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:8px;margin-top:10px;}
 .info{font-size:11px;color:#60a5fa;padding:8px 12px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.2);border-radius:8px;margin-top:10px;}
 
 @media(max-width:640px){
-  .app{padding:1.25rem 1rem;}
-  .ttl{font-size:20px;}
+  /* Layout */
+  .app{padding:1rem 0.85rem;}
+  .header{margin-bottom:1.25rem;flex-wrap:wrap;gap:8px;}
+  .ttl{font-size:18px;}
+  .logo{font-size:9px;}
+  .hright{gap:6px;}
+  .live{padding:4px 8px;font-size:10px;}
+  .btn{padding:5px 10px;font-size:11px;}
+
+  /* Tổng danh mục */
+  .sc-total{padding:16px 18px;}
+  .sc-total .sv{font-size:28px;letter-spacing:-1px;}
+  .sc-total .ss{font-size:11px;}
+  .alloc-labels{gap:8px 10px;}
+  .alloc-lbl{font-size:9px;}
+  .smry-sub{grid-template-columns:1fr 1fr;gap:8px;}
+  .sv{font-size:15px;}
+  .sl{font-size:9px;}
+  .sc{padding:10px 12px;}
+  .sc .asset-pct{font-size:10px;padding:2px 5px;}
+
+  /* Holdings */
   .holdings-row{grid-template-columns:1fr;gap:10px;}
   .hinput{font-size:16px;padding:10px 52px 10px 12px;}
-  .smry-sub{grid-template-columns:1fr;gap:10px;}
-  .sc-total .sv{font-size:30px;}
-  .sv{font-size:16px;}
-  .cw{height:160px;}
-  .foot{flex-direction:column;align-items:flex-start;gap:10px;}
-  .asset-grid{grid-template-columns:1fr;}
+  .hfield{padding:12px 14px;}
+  .hlabel{font-size:11px;}
+  .hticker{font-size:9px;}
+  .hval{font-size:13px;}
+  .hval-price{font-size:10px;}
+
+  /* Chart 7 ngày */
+  .csec{padding:14px;}
+  .chdr{flex-direction:column;align-items:flex-start;gap:8px;}
+  .ctit{font-size:9px;}
+  .leg{gap:8px;}
+  .li{font-size:10px;}
+  .cw{height:150px;}
+
+  /* Footer */
+  .foot{flex-direction:column;align-items:flex-start;gap:8px;}
+  .fsrc{font-size:10px;}
+
+  /* Modal */
+  .modal{padding:18px 16px;width:95vw;}
+  .modal h3{font-size:14px;}
+  .modal-sub{font-size:10px;}
+  .modal-tabs{gap:5px;}
+  .mtab{padding:4px 9px;font-size:10px;}
+  .asset-grid{grid-template-columns:1fr 1fr;gap:6px;}
+  .asset-opt{padding:8px 10px;}
+  .ao-name{font-size:11px;}
+  .ao-tick{font-size:9px;}
   .modal-row{grid-template-columns:1fr;}
+  .modal-input{font-size:13px;padding:8px 10px;}
+  .mbtn{padding:7px 14px;font-size:11px;}
+
+  /* Forecast */
+  #fc-asset-scenarios{grid-template-columns:1fr !important;}
+  #fc-metrics{grid-template-columns:1fr 1fr !important;}
+  .fc-metric{padding:10px 12px;}
+  .fc-metric .fc-mv{font-size:14px;}
+  .fc-metric .fc-ml{font-size:9px;}
+  /* Sliders vốn/DCA */
+  #forecast-section > div:nth-child(3){grid-template-columns:1fr !important;}
+  /* Chart dự báo */
+  #fc-chart{height:180px !important;}
+  #forecast-section [style*="height:260px"]{height:180px !important;}
+  /* Bảng ẩn bớt cột trên mobile */
+  #fc-table{font-size:10px;}
+  #fc-table th,#fc-table td{padding:5px 5px;}
+  /* Sync button */
+  .chdr .btn{font-size:10px;padding:4px 8px;}
 }
+
 @media(min-width:641px) and (max-width:900px){
   .holdings-row{grid-template-columns:repeat(2,1fr);}
   .smry-sub{grid-template-columns:repeat(3,1fr);}
+  #fc-asset-scenarios{grid-template-columns:repeat(2,1fr) !important;}
+  #fc-metrics{grid-template-columns:repeat(3,1fr) !important;}
 }
 </style>
 </head>
@@ -242,21 +308,23 @@ body{font-family:var(--sans);background:var(--bg);color:var(--tx);min-height:100
     <div id="fc-asset-scenarios" style="display:grid;gap:12px;margin-bottom:16px;"></div>
 
     <!-- Thông số -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+    <div class="fc-params-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
       <div class="hfield" style="padding:14px 16px;">
         <div class="sl" style="margin-bottom:8px;">VỐN BAN ĐẦU (USD)</div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <input type="range" id="fc-init" min="1000" max="500000" step="1000" value="30000"
-            oninput="fcUpdateInit(+this.value)" style="flex:1;accent-color:var(--blue);">
-          <span id="fc-init-val" style="font-size:14px;font-weight:600;font-family:var(--mono);min-width:90px;text-align:right;">$30,000</span>
+        <div class="hinput-wrap">
+          <input class="hinput" type="text" id="fc-init" value="30,000"
+            placeholder="30,000" oninput="fcInputInit(this)"
+            style="font-size:15px;font-weight:600;padding-right:48px;">
+          <span class="hunit">USD</span>
         </div>
       </div>
       <div class="hfield" style="padding:14px 16px;">
         <div class="sl" style="margin-bottom:8px;">DCA / THÁNG (USD)</div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <input type="range" id="fc-dca" min="0" max="10000" step="100" value="0"
-            oninput="fcUpdateDCA(+this.value)" style="flex:1;accent-color:var(--blue);">
-          <span id="fc-dca-val" style="font-size:14px;font-weight:600;font-family:var(--mono);min-width:90px;text-align:right;">$0</span>
+        <div class="hinput-wrap">
+          <input class="hinput" type="text" id="fc-dca" value="0"
+            placeholder="0" oninput="fcInputDCA(this)"
+            style="font-size:15px;font-weight:600;padding-right:48px;">
+          <span class="hunit">USD</span>
         </div>
       </div>
     </div>
@@ -389,6 +457,21 @@ const PALETTE = ['#4f8ef7','#8b6cf7','#f5a623','#34d399','#f87171','#60a5fa','#a
 let palIdx = 0;
 
 // ─────────────────────────────────────────────────────────────
+//  PRICE CACHE  (tránh rate limit 429)
+// ─────────────────────────────────────────────────────────────
+const PRICE_CACHE = {}; // key → { price, pct, ts }
+const CACHE_TTL = 3 * 60 * 1000; // 3 phút
+
+function cacheGet(key) {
+  const c = PRICE_CACHE[key];
+  if (c && Date.now() - c.ts < CACHE_TTL) return c;
+  return null;
+}
+function cacheSet(key, price, pct) {
+  PRICE_CACHE[key] = { price, pct, ts: Date.now() };
+}
+
+// ─────────────────────────────────────────────────────────────
 //  CORS / FETCH  (với timeout)
 // ─────────────────────────────────────────────────────────────
 const TIMEOUT_MS = 6000;
@@ -432,6 +515,8 @@ async function fetchTwelveData(symbol) {
 }
 
 async function fetchYahoo(symbol) {
+  const cached = cacheGet('yahoo:'+symbol);
+  if (cached) return { price: cached.price, pct: cached.pct, history: [] };
   const parseYahoo = d => {
     if (d?.chart?.result?.[0]) {
       const res = d.chart.result[0];
@@ -475,7 +560,11 @@ async function fetchYahoo(symbol) {
     return v;
   })());
 
-  try { return await Promise.any(allAttempts); }
+  try {
+    const result = await Promise.any(allAttempts);
+    cacheSet('yahoo:'+symbol, result.price, result.pct);
+    return result;
+  }
   catch(_) { throw new Error(`${symbol} không tải được`); }
 }
 
@@ -494,46 +583,54 @@ const CRYPTO_SYMBOLS = {
 };
 
 async function fetchOneCrypto(id) {
-  const sym = CRYPTO_SYMBOLS[id]?.cc || id.toUpperCase();
-  const bSym = CRYPTO_SYMBOLS[id]?.binance;
+  // Kiểm tra cache trước
+  const cached = cacheGet('crypto:'+id);
+  if (cached) return { id, current_price: cached.price, price_change_percentage_24h: cached.pct };
 
-  // Thử CoinGecko, CryptoCompare, Binance song song — lấy kết quả đầu tiên
+  const sym  = CRYPTO_SYMBOLS[id]?.cc || id.toUpperCase();
+  const bSym = CRYPTO_SYMBOLS[id]?.binance;
   const attempts = [];
 
-  // 1) CoinGecko qua proxy
-  attempts.push((async () => {
-    const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${id}&price_change_percentage=24h`;
-    const data = await tryFetch(url);
-    if (Array.isArray(data) && data[0]?.current_price) return data[0];
-    throw new Error('no data');
-  })());
-
-  // 2) CryptoCompare
-  attempts.push((async () => {
-    const r = await fetchWithTimeout(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${sym}&tsyms=USD`);
-    if (!r.ok) throw new Error('not ok');
-    const d = await r.json();
-    const info = d?.RAW?.[sym]?.USD;
-    if (!info?.PRICE) throw new Error('no price');
-    return { id, current_price: info.PRICE, price_change_percentage_24h: info.CHANGEPCT24HOUR };
-  })());
-
-  // 3) Binance
+  // 1) Binance — không cần proxy, không bị rate limit, nhanh nhất
   if (bSym) {
     attempts.push((async () => {
       const r = await fetchWithTimeout(`https://api.binance.com/api/v3/ticker/24hr?symbol=${bSym}`);
       if (!r.ok) throw new Error('not ok');
       const d = await r.json();
       if (!d.lastPrice) throw new Error('no price');
-      return { id, current_price: parseFloat(d.lastPrice), price_change_percentage_24h: parseFloat(d.priceChangePercent) };
+      const result = { id, current_price: parseFloat(d.lastPrice), price_change_percentage_24h: parseFloat(d.priceChangePercent) };
+      cacheSet('crypto:'+id, result.current_price, result.price_change_percentage_24h);
+      return result;
     })());
   }
 
-  try {
-    return await Promise.any(attempts);
-  } catch(_) {
-    throw new Error(`${id} không tải được`);
-  }
+  // 2) CryptoCompare — trực tiếp, không proxy
+  attempts.push((async () => {
+    const r = await fetchWithTimeout(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${sym}&tsyms=USD`);
+    if (!r.ok) throw new Error('not ok');
+    const d = await r.json();
+    const info = d?.RAW?.[sym]?.USD;
+    if (!info?.PRICE) throw new Error('no price');
+    const result = { id, current_price: info.PRICE, price_change_percentage_24h: info.CHANGEPCT24HOUR };
+    cacheSet('crypto:'+id, result.current_price, result.price_change_percentage_24h);
+    return result;
+  })());
+
+  // 3) CoinGecko — chỉ dùng 1 proxy (không gọi nhiều cùng lúc)
+  attempts.push((async () => {
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd&include_24hr_change=true`;
+    const r = await fetchWithTimeout(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+    if (!r.ok) throw new Error('not ok');
+    const d = await r.json();
+    const price = d?.[id]?.usd;
+    if (!price) throw new Error('no price');
+    const result = { id, current_price: price, price_change_percentage_24h: d[id]?.usd_24h_change ?? null };
+    cacheSet('crypto:'+id, result.current_price, result.price_change_percentage_24h);
+    return result;
+  })());
+
+  try { return await Promise.any(attempts); }
+  catch(_) { throw new Error(`${id} không tải được`); }
 }
 
 async function fetchCrypto(ids) {
@@ -622,6 +719,8 @@ const COMMODITY_MAP = {};
 COMMODITY_CATALOG.forEach(c => { COMMODITY_MAP[c.id] = c; });
 
 async function fetchCommodity(id) {
+  const cached = cacheGet('commodity:'+id);
+  if (cached) return { id, current_price: cached.price, price_change_percentage_24h: cached.pct };
   const meta = COMMODITY_MAP[id] || {};
   const attempts = [];
 
@@ -681,7 +780,11 @@ async function fetchCommodity(id) {
     })());
   }
 
-  try { return await Promise.any(attempts); }
+  try {
+    const result = await Promise.any(attempts);
+    cacheSet('commodity:'+id, result.current_price, result.price_change_percentage_24h);
+    return result;
+  }
   catch(_) { throw new Error(`${meta.ticker||id} không tải được`); }
 }
 
@@ -757,7 +860,9 @@ function renderSummaryCards() {
   }).join('');
 
   const n = assets.length;
-  sub.style.gridTemplateColumns = n > 0 ? `repeat(${Math.min(n,3)},1fr)` : '1fr';
+  const isMobile = window.innerWidth <= 640;
+  const cols = isMobile ? Math.min(n, 2) : Math.min(n, 3);
+  sub.style.gridTemplateColumns = cols > 0 ? `repeat(${cols},1fr)` : '1fr';
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -1201,24 +1306,32 @@ function fcSetScenario(i, key) {
   fcUpdate();
 }
 
-function fcUpdateInit(v) {
-  fcInitAmt = v;
-  document.getElementById('fc-init-val').textContent = fcFmt(v);
-  fcUpdate();
+function fcFormatInput(el) {
+  const raw = el.value.replace(/,/g, '');
+  const num = parseFloat(raw);
+  if (!isNaN(num) && num >= 0) {
+    // Lưu vị trí con trỏ để không bị nhảy
+    const selStart = el.selectionStart;
+    const oldLen = el.value.length;
+    el.value = Math.round(num).toLocaleString('en-US');
+    const newLen = el.value.length;
+    el.setSelectionRange(selStart + (newLen - oldLen), selStart + (newLen - oldLen));
+    return Math.round(num);
+  }
+  return 0;
 }
-function fcUpdateDCA(v) {
-  fcDCA = v;
-  document.getElementById('fc-dca-val').textContent = fcFmt(v);
-  fcUpdate();
-}
+function fcInputInit(el) { fcInitAmt = fcFormatInput(el); fcUpdate(); }
+function fcInputDCA(el)  { fcDCA     = fcFormatInput(el); fcUpdate(); }
+
+function fcUpdateInit(v) { fcInitAmt = v; fcUpdate(); }
+function fcUpdateDCA(v)  { fcDCA = v; fcUpdate(); }
 
 function syncFromPortfolio() {
-  // Lấy tổng giá trị hiện tại làm vốn ban đầu
   const total = assets.reduce((s,a) => s + (a.price!=null ? a.price*(a.qty||0) : 0), 0);
   if (total > 0) {
     fcInitAmt = Math.round(total);
-    document.getElementById('fc-init').value = Math.min(fcInitAmt, 500000);
-    document.getElementById('fc-init-val').textContent = fcFmt(fcInitAmt);
+    const el = document.getElementById('fc-init');
+    if (el) el.value = fcInitAmt.toLocaleString('en-US');
   }
   fcUpdate();
 }
@@ -1331,6 +1444,13 @@ renderHoldings();
 recalc();
 loadAll().then(() => initForecast());
 
+// Re-render khi xoay màn hình
+window.addEventListener('resize', () => {
+  renderSummaryCards();
+  if (fcChart2) { fcChart2.resize(); }
+  if (C) { C.resize(); }
+});
+
 // Auto-refresh mỗi 60s: chỉ update giá, không reset DOM/qty
 async function silentRefresh() {
   if (busy) return;
@@ -1357,7 +1477,7 @@ async function silentRefresh() {
   buildChart();
   $('ut').textContent = 'cập nhật '+new Date().toLocaleTimeString('vi-VN');
 }
-setInterval(silentRefresh, 60000);
+setInterval(silentRefresh, 5 * 60 * 1000); // 5 phút
 </script>
 </body>
 </html>
